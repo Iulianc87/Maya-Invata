@@ -1,0 +1,38 @@
+{
+    "istoric_teste": [
+        {
+            "scor": 10,
+            "total": 10,
+            "animal": "unicorn"
+        },
+        {
+            "scor": 10,
+            "total": 10,
+            "animal": "unicorn"
+        },
+        {
+            "scor": 10,
+            "total": 10,
+            "animal": "unicorn"
+        },
+        {
+            "scor": 8,
+            "total": 10,
+            "animal": "iepuras"
+        },
+        {
+            "scor": 10,
+            "total": 10,
+            "animal": "unicorn"
+        },
+        {
+            "scor": 8,
+            "total": 10,
+            "animal": "iepuras"
+        }
+    ],
+    "inventar": {
+        "unicorn": 4,
+        "iepuras": 2
+    }
+}

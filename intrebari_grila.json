@@ -1,0 +1,12 @@
+[
+    {"text": "Cât fac 2 + 2?", "optiuni": ["4", "3", "5"], "corect": "4"},
+    {"text": "Câte degete avem la o singură mână?", "optiuni": ["4", "5", "6"], "corect": "5"},
+    {"text": "Cât fac 3 + 3?", "optiuni": ["5", "6", "7"], "corect": "6"},
+    {"text": "Care număr este mai mare decât 3 și mai mic decât 5?", "optiuni": ["2", "4", "6"], "corect": "4"},
+    {"text": "Dacă ai 2 mere și mai primești 2, câte ai?", "optiuni": ["3", "4", "5"], "corect": "4"},
+    {"text": "Cât fac 1 + 4?", "optiuni": ["5", "4", "6"], "corect": "5"},
+    {"text": "Cât fac 5 + 0?", "optiuni": ["0", "5", "10"], "corect": "5"},
+    {"text": "Dacă ai 5 bomboane și mănânci 1, câte au rămas?", "optiuni": ["3", "4", "6"], "corect": "4"},
+    {"text": "Cât este 8 - 4?", "optiuni": ["3", "4", "5"], "corect": "4"},
+    {"text": "Câte picioare are un cățeluș?", "optiuni": ["2", "4", "6"], "corect": "4"}
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "ex": "Dac\u0103 ai 5 bomboane \u0219i m\u0103n\u00e2nci 1, c\u00e2te au r\u0103mas?",
+        "gresit": "6",
+        "corect": "4"
+    },
+    {
+        "ex": "Dac\u0103 ai 5 bomboane \u0219i m\u0103n\u00e2nci 1, c\u00e2te au r\u0103mas?",
+        "gresit": "3",
+        "corect": "4"
+    },
+    {
+        "ex": "Dac\u0103 ai 5 bomboane \u0219i m\u0103n\u00e2nci 1, c\u00e2te au r\u0103mas?",
+        "gresit": "6",
+        "corect": "4"
+    },
+    {
+        "ex": "16 - 15",
+        "gresit": "3",
+        "corect": 1
+    }
+]
