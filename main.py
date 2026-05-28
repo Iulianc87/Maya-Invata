@@ -2,7 +2,7 @@ import os
 import json
 from kivy.app import App
 from kivy.utils import platform
-from kivy.clock import Clock # Adăugat
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.boxlayout import BoxLayout
@@ -21,7 +21,7 @@ from mate import EcranMate
 from scriere import EcranScriere
 from dictare import EcranDictare
 
-# Gestionare cale fișiere pentru Android
+# Gestionare cale fișiere
 if platform == 'android':
     from android.storage import app_storage_path
     APP_STORAGE = app_storage_path()
@@ -38,13 +38,10 @@ class EcranGreseli(Screen):
         self.clear_widgets()
         main_layout = BoxLayout(orientation='vertical', padding=10)
         main_layout.add_widget(Label(text="Jurnalul greșelilor", font_size='30sp', size_hint_y=0.1))
-        
         scroll = ScrollView()
         lista_layout = BoxLayout(orientation='vertical', size_hint_y=None)
         lista_layout.bind(minimum_height=lista_layout.setter('height'))
-        
         cale = os.path.join(APP_STORAGE, "greseli.json")
-        
         if os.path.exists(cale):
             with open(cale, "r", encoding="utf-8") as f:
                 try:
@@ -57,10 +54,8 @@ class EcranGreseli(Screen):
                     lista_layout.add_widget(Label(text="Eroare la citirea jurnalului."))
         else:
             lista_layout.add_widget(Label(text="Nu există greșeli salvate.", font_size='20sp'))
-        
         scroll.add_widget(lista_layout)
         main_layout.add_widget(scroll)
-
         btn_back = Button(text="Înapoi", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5})
         btn_back.bind(on_release=lambda x: setattr(self.manager, 'current', 'meniu'))
         main_layout.add_widget(btn_back)
@@ -86,8 +81,11 @@ class EcranMeniu(Screen):
 
     def afiseaza_continut(self):
         self.layout.clear_widgets()
-        # ... logica ta de UI ...
-        
+        # AICI este butonul/iconița pentru catalog, așa cum era în codul tău vechi
+        btn_catalog = ResponsiveIconButton(source='catalog.png', size_hint=(0.3, 0.3), pos_hint={'x': 0.7, 'y': 0.7})
+        btn_catalog.bind(on_release=lambda x: setattr(self.manager, 'current', 'catalog'))
+        self.layout.add_widget(btn_catalog)
+
     def verific_apasari_secrete(self, instance):
         self.click_counter += 1
         if self.click_counter >= 3:
@@ -100,13 +98,11 @@ class EcranMeniu(Screen):
 
 class MayaInvataApp(App):
     def build(self):
-        # AICI AM MODIFICAT: Orientarea e setată înainte de orice
         if platform == 'android':
             from jnius import autoclass
             ActivityInfo = autoclass('android.content.pm.ActivityInfo')
             activity = autoclass('org.kivy.android.PythonActivity').mActivity
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
         sm = ScreenManager(transition=NoTransition())
         sm.add_widget(EcranMeniu(name='meniu'))
         sm.add_widget(EcranCatalog(name='catalog'))
@@ -117,7 +113,6 @@ class MayaInvataApp(App):
         return sm
 
     def on_start(self):
-        # AICI AM MODIFICAT: Delay pentru Fullscreen ca să nu crape pe G7
         Clock.schedule_once(self._set_fullscreen, 0.5)
 
     def _set_fullscreen(self, dt):
@@ -127,8 +122,7 @@ class MayaInvataApp(App):
                 activity = autoclass('org.kivy.android.PythonActivity').mActivity
                 LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
                 activity.getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
-            except:
-                pass
+            except: pass
 
 if __name__ == '__main__':
     MayaInvataApp().run()
