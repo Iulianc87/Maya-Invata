@@ -4,7 +4,7 @@ package.name = maya_invata
 package.domain = org.maya
 
 source.dir = .
-source.include_exts = py,png,jpg,kv,json
+source.include_exts = py,png,jpg,kv,json,ttf
 
 version = 0.1
 
@@ -14,11 +14,19 @@ orientation = portrait
 
 fullscreen = 0
 
-android.api = 27
+android.api = 33
 android.minapi = 21
-android.ndk = 21b
-android.archs = armeabi-v7a
+android.ndk = 25b
+android.archs = arm64-v8a, armeabi-v7a
 
 android.permissions = INTERNET
 
 presplash.color = #f2e6f5
+
+# ---------------------------------------------------------------------
+
+[buildozer]
+
+log_level = 2
+
+warn_on_root = 1
