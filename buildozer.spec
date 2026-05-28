@@ -1,8 +1,8 @@
 [app]
-source.dir = .
 title = Maya Invata
 package.name = mayainvata
 package.domain = org.maya
+source.dir = .
 source.include_exts = py,png,jpg,kv,json,ttf
 version = 0.1
 requirements = python3,kivy,pygame
@@ -17,4 +17,4 @@ android.archs = armeabi-v7a
 
 [buildozer]
 log_level = 2
-warn_on_root = 1
+warn_on_root = 0
