@@ -14,8 +14,8 @@ jobs:
       - name: Build
         run: |
           export BUILDOZER_ALLOW_ROOT=1
-          pip install --upgrade buildozer
-          buildozer clean
+          # Sarim peste 'buildozer clean' pentru ca da eroare
+          # Rulăm direct build-ul
           yes y | buildozer -v android debug
       
       - name: Upload
