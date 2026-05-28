@@ -1,25 +1,16 @@
 [app]
 title = Maya Invata
-package.name = mayainvata
-package.domain = org.mayainvata
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas,ttf,json
-version = 1.0
-requirements = python3,kivy,plyer,pyjnius,android
-android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
-fullscreen = 0
-android.orientation = portrait
-android.manifest.orientation = portrait
+package.name = maya_invata
+package.domain = org.maya
+source.include_exts = py,png,jpg,kv,json
+version = 0.1
 
-# Compatibilitate G7/J4+
+requirements = python3,kivy
+
+android.permissions = INTERNET
+android.api = 27
+android.minapi = 21
+android.ndk = 21b
 android.archs = armeabi-v7a
 
-android.api = 33
-android.minapi = 21
-android.sdk = 33
-android.ndk = 23b
-android.build_tools_version = 33.0.0
-
-[buildozer]
-log_level = 2
-warn_on_root = 1
+orientation = portrait
