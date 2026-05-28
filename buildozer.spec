@@ -11,6 +11,7 @@ fullscreen = 0
 android.permissions = INTERNET
 android.minapi = 21
 android.sdk = 31
+android.api = 31
 android.ndk = 25b
 android.archs = armeabi-v7a
 
