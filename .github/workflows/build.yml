@@ -14,9 +14,9 @@ jobs:
       - name: Build
         run: |
           export BUILDOZER_ALLOW_ROOT=1
-          # Sarim peste 'buildozer clean' pentru ca da eroare
-          # Rulăm direct build-ul
-          yes y | buildozer -v android debug
+          # Adăugăm parametrul --debug pentru a vedea eroarea reală
+          # Și scoatem 'yes y' pentru a vedea dacă se blochează la o întrebare
+          buildozer -v android debug
       
       - name: Upload
         uses: actions/upload-artifact@v4
