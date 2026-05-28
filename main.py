@@ -134,6 +134,10 @@ class MayaInvataApp(App):
             ActivityInfo = autoclass('android.content.pm.ActivityInfo')
             activity = autoclass('org.kivy.android.PythonActivity').mActivity
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            activity.getWindow().setFlags(
+                autoclass('android.view.WindowManager$LayoutParams').FLAG_FULLSCREEN,
+                autoclass('android.view.WindowManager$LayoutParams').FLAG_FULLSCREEN
+            )
         
         sm = ScreenManager()
         sm.add_widget(EcranMeniu(name='meniu'))
