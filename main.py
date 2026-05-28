@@ -2,6 +2,8 @@ import os
 import json
 from kivy.app import App
 from kivy.utils import platform
+from kivy.clock import Clock # Adăugat
+from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
@@ -41,7 +43,6 @@ class EcranGreseli(Screen):
         lista_layout = BoxLayout(orientation='vertical', size_hint_y=None)
         lista_layout.bind(minimum_height=lista_layout.setter('height'))
         
-        # CALEA CORECTĂ PENTRU ANDROID
         cale = os.path.join(APP_STORAGE, "greseli.json")
         
         if os.path.exists(cale):
@@ -85,8 +86,7 @@ class EcranMeniu(Screen):
 
     def afiseaza_continut(self):
         self.layout.clear_widgets()
-        # ... (restul logicii tale de UI rămâne la fel) ...
-        # Am păstrat structura ta, asigură-te doar că imaginile sunt în folder
+        # ... logica ta de UI ...
         
     def verific_apasari_secrete(self, instance):
         self.click_counter += 1
@@ -100,7 +100,13 @@ class EcranMeniu(Screen):
 
 class MayaInvataApp(App):
     def build(self):
-        # Utilizăm NoTransition pentru a evita crash-urile grafice
+        # AICI AM MODIFICAT: Orientarea e setată înainte de orice
+        if platform == 'android':
+            from jnius import autoclass
+            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
+            activity = autoclass('org.kivy.android.PythonActivity').mActivity
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
         sm = ScreenManager(transition=NoTransition())
         sm.add_widget(EcranMeniu(name='meniu'))
         sm.add_widget(EcranCatalog(name='catalog'))
@@ -111,16 +117,18 @@ class MayaInvataApp(App):
         return sm
 
     def on_start(self):
-        # Mutăm logica Android aici pentru a fi siguri că fereastra există
+        # AICI AM MODIFICAT: Delay pentru Fullscreen ca să nu crape pe G7
+        Clock.schedule_once(self._set_fullscreen, 0.5)
+
+    def _set_fullscreen(self, dt):
         if platform == 'android':
-            from jnius import autoclass
-            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
-            activity = autoclass('org.kivy.android.PythonActivity').mActivity
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            
-            WindowManager = autoclass('android.view.WindowManager')
-            LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
-            activity.getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
+            try:
+                from jnius import autoclass
+                activity = autoclass('org.kivy.android.PythonActivity').mActivity
+                LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
+                activity.getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
+            except:
+                pass
 
 if __name__ == '__main__':
     MayaInvataApp().run()
