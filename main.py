@@ -1,23 +1,14 @@
 import os
 import json
 from kivy.config import Config
-# Forțăm aplicația să ignore rotația automată
+
+# --- CONFIGURARE GRAFICĂ (forțată la început) ---
 Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'width', '720')
 Config.set('graphics', 'height', '1280')
-from kivy.utils import platform
 
-class MayaInvataApp(App):
-    def build(self):
-        if platform == 'android':
-            from jnius import autoclass
-            # Forțăm portretul la nivel de sistem Android
-            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
-            activity = autoclass('org.kivy.android.PythonActivity').mActivity
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        
-        return ScreenManager()
 from kivy.app import App
+from kivy.utils import platform
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
@@ -26,7 +17,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.scrollview import ScrollView # Adaugă asta sus la importuri
+from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
 
 # --- IMPORTURILE MODULELOR TALE ---
@@ -45,12 +36,9 @@ class SecretLabel(ButtonBehavior, Label):
 class EcranGreseli(Screen):
     def on_enter(self):
         self.clear_widgets()
-        
-        # 1. Container principal
         main_layout = BoxLayout(orientation='vertical', padding=10)
         main_layout.add_widget(Label(text="Jurnalul greșelilor", font_size='30sp', size_hint_y=0.1))
         
-        # 2. ScrollView pentru a vedea lista lungă de greșeli
         scroll = ScrollView()
         lista_layout = BoxLayout(orientation='vertical', size_hint_y=None)
         lista_layout.bind(minimum_height=lista_layout.setter('height'))
@@ -60,7 +48,6 @@ class EcranGreseli(Screen):
             with open(cale, "r", encoding="utf-8") as f:
                 try:
                     greseli = json.load(f)
-                    # Eliminăm [-10:] pentru a vedea TOT istoricul
                     for g in greseli: 
                         text_g = f"Exercițiu: {g['ex']} | A pus: {g['gresit']} | Corect: {g['corect']}"
                         lbl = Label(text=text_g, size_hint_y=None, height=40, font_size='16sp')
@@ -73,11 +60,9 @@ class EcranGreseli(Screen):
         scroll.add_widget(lista_layout)
         main_layout.add_widget(scroll)
 
-        # 3. Butonul Înapoi
         btn_back = Button(text="Înapoi", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5})
         btn_back.bind(on_release=lambda x: setattr(self.manager, 'current', 'meniu'))
         main_layout.add_widget(btn_back)
-        
         self.add_widget(main_layout)
 
 # --- CLASA MENIU ---
@@ -102,14 +87,12 @@ class EcranMeniu(Screen):
     def afiseaza_continut(self):
         self.layout.clear_widgets()
         
-        # 1. Cartea (Catalog)
         anchor_carte = AnchorLayout(anchor_x='right', anchor_y='top', size_hint=(0.15, 0.15), pos_hint={'top': 1, 'right': 1})
         btn_cat = ResponsiveIconButton(source='carte.png', size_hint=(0.8, 0.8))
         btn_cat.bind(on_release=lambda x: self.schimba_ecran('catalog'))
         anchor_carte.add_widget(btn_cat)
         self.layout.add_widget(anchor_carte)
         
-        # 2. Header cu butonul secret
         header_box = BoxLayout(orientation='vertical', size_hint=(0.8, 0.2), pos_hint={'center_x': 0.5, 'top': 0.95})
         lbl_nume = SecretLabel(text="Bun venit, [b]Maya![/b]", markup=True, font_size='28sp', color=(0.3, 0.1, 0.4, 1))
         lbl_nume.bind(on_release=self.verific_apasari_secrete)
@@ -117,7 +100,6 @@ class EcranMeniu(Screen):
         header_box.add_widget(Label(text="Ce vrei să facem azi?", font_size='22sp', color=(0.4, 0.2, 0.5, 1)))
         self.layout.add_widget(header_box)
 
-        # 3. Butoanele Modulelor
         icons_box = BoxLayout(orientation='vertical', spacing=20, size_hint=(0.7, 0.55), pos_hint={'center_x': 0.5, 'center_y': 0.40})
         for nume in ['mate', 'scriere', 'dictare']:
             btn = ResponsiveIconButton(source=f'{nume}.png', size_hint=(1, 1))
@@ -140,8 +122,16 @@ class EcranMeniu(Screen):
         self.rect.size = self.size
         self.rect.pos = self.pos
 
-class TestApp(App):
+# --- CLASA APLICAȚIEI (Singura și oficială) ---
+class MayaInvataApp(App):
     def build(self):
+        # FORȚĂM ORIENTAREA PE VERTICALĂ (PORTRAIT) PE ANDROID
+        if platform == 'android':
+            from jnius import autoclass
+            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
+            activity = autoclass('org.kivy.android.PythonActivity').mActivity
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        
         sm = ScreenManager()
         sm.add_widget(EcranMeniu(name='meniu'))
         sm.add_widget(EcranCatalog(name='catalog'))
@@ -152,4 +142,4 @@ class TestApp(App):
         return sm
 
 if __name__ == '__main__':
-    TestApp().run()
+    MayaInvataApp().run()
