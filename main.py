@@ -2,10 +2,13 @@ import os
 import json
 from kivy.config import Config
 
-# --- CONFIGURARE GRAFICĂ (forțată la început) ---
+# Forțăm Kivy să ignore orice încercare de redimensionare automată
 Config.set('graphics', 'resizable', '0')
+Config.set('graphics', 'rotation', '0')
 Config.set('graphics', 'width', '720')
 Config.set('graphics', 'height', '1280')
+Config.set('graphics', 'fullscreen', '0') # Asigură-te că nu e fullscreen forțat
+Config.write() # Scrie configurarea
 
 from kivy.app import App
 from kivy.utils import platform
