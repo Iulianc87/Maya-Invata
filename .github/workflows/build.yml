@@ -13,19 +13,11 @@ jobs:
       
       - name: Build
         run: |
-          # Ignorăm verificarea de root complet
           export BUILDOZER_ALLOW_ROOT=1
-          
-          # Ștergem orice urmă de build anterior care ar putea fi coruptă
+          pip install --upgrade buildozer
           buildozer clean
-                  
-          # Instalăm/actualizăm ce e strict necesar
-          pip install --upgrade pip
-          pip install setuptools
-          
-          # Rulăm buildozer direct
           yes y | buildozer -v android debug
-        
+      
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
