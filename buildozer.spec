@@ -5,7 +5,7 @@ package.domain = org.mayainvata
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,ttf
 version = 1.0
-requirements = python3,kivy,plyer
+requirements = python3,kivy,plyer,pyjnius
 
 # Permisiuni
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
