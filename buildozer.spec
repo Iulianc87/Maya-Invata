@@ -2,6 +2,7 @@
 title = Maya Invata
 package.name = maya_invata
 package.domain = org.maya
+source.dir = .
 source.include_exts = py,png,jpg,kv,json
 version = 0.1
 
