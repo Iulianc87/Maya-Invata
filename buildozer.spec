@@ -1,19 +1,19 @@
 [app]
 title = Maya Invata
-package.name = maya_invata
+package.name = mayainvata
 package.domain = org.maya
 source.dir = .
-source.include_exts = py,png,jpg,kv,json
+source.include_exts = py,png,jpg,kv,json,ttf
 version = 0.1
-
-# Adaugă pyjnius aici, este necesar pentru ca Python să comunice cu Android
 requirements = python3,kivy,gtts,pygame,pyjnius
-
+orientation = portrait
+fullscreen = 0
 android.permissions = INTERNET
-android.api = 28
 android.minapi = 21
-android.ndk = 21b
+android.sdk = 31
+android.ndk = 25b
 android.archs = armeabi-v7a
 
-# Asigură-te că ecranul este setat pe landscape dacă așa vrei să ruleze
-orientation = portrait
+[buildozer]
+log_level = 2
+warn_on_root = 1
