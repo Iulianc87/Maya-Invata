@@ -11,19 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+
       - name: Build
         run: |
           export BUILDOZER_ALLOW_ROOT=1
-          
-          # FORȚĂM CURĂȚENIA: ștergem tot folderul .buildozer 
-          # ca să obligăm sistemul să descarce totul de la zero, ca la prima reușită
+          # Ștergem orice reziduu pentru a forța compilarea codului tău nou
           rm -rf .buildozer
           
-          # Rulăm build-ul
-          yes y | buildozer -v android debug
+          # Construim APK-ul pentru Maya Invata
+          buildozer -v android debug
       
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: scoalamaya-v2-apk
+          name: mayainvata-apk
           path: bin/*.apk
