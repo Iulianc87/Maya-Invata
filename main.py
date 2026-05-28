@@ -1,5 +1,22 @@
 import os
 import json
+from kivy.config import Config
+# Forțăm aplicația să ignore rotația automată
+Config.set('graphics', 'resizable', '0')
+Config.set('graphics', 'width', '720')
+Config.set('graphics', 'height', '1280')
+from kivy.utils import platform
+
+class MayaInvataApp(App):
+    def build(self):
+        if platform == 'android':
+            from jnius import autoclass
+            # Forțăm portretul la nivel de sistem Android
+            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
+            activity = autoclass('org.kivy.android.PythonActivity').mActivity
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        
+        return ScreenManager()
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
