@@ -1,20 +1,30 @@
 name: Build APK
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          buildozer_version: stable
-      - name: Upload APK
+      - uses: actions/checkout@v4
+      
+      - name: Build
+        run: |
+          # Ignorăm verificarea de root complet
+          export BUILDOZER_ALLOW_ROOT=1
+          
+          # Instalăm/actualizăm ce e strict necesar
+          pip install --upgrade pip
+          pip install setuptools
+          
+          # Rulăm buildozer direct
+          yes y | buildozer -v android debug
+        
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: package
+          name: scoalamaya-v2-apk
           path: bin/*.apk
