@@ -137,8 +137,8 @@ class EcranMeniu(Screen):
         # Layout principal
         main_box = BoxLayout(
             orientation='vertical',
-            padding=20,
-            spacing=20
+            padding=12,
+            spacing=12
         )
 
         # ---------------- HEADER ----------------
