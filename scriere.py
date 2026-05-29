@@ -1,6 +1,7 @@
 import json
 import random
 
+from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -22,11 +23,12 @@ class EcranScriere(Screen):
 
         self.layout = BoxLayout(
             orientation='vertical',
-            padding=40,
-            spacing=20
+            padding=20,
+            spacing=15
         )
 
-        # Buton inapoi
+        # ---------------- BUTON ÎNAPOI ----------------
+
         anchor_top = AnchorLayout(
             anchor_x='left',
             anchor_y='top',
@@ -35,41 +37,63 @@ class EcranScriere(Screen):
 
         btn_back = Button(
             text="",
+
             size_hint=(None, None),
-            size=(60, 60),
+            size=(55, 55),
+
             background_normal='sageata_inapoi.png',
+
             border=(0, 0, 0, 0)
         )
 
         btn_back.bind(
-            on_release=lambda x: setattr(self.manager, 'current', 'meniu')
+            on_release=lambda x:
+            setattr(self.manager, 'current', 'meniu')
         )
 
         anchor_top.add_widget(btn_back)
 
         self.layout.add_widget(anchor_top)
 
-        # Label principal
+        # ---------------- LABEL PRINCIPAL ----------------
+
         self.lbl_text = Label(
             text="Apasă butonul pentru un exercițiu!",
-            font_size='30sp',
+
+            font_size='28sp',
+
             color=(0.3, 0.1, 0.4, 1),
-            halign='center'
+
+            halign='center',
+            valign='middle',
+
+            text_size=(Window.width * 0.9, None),
+
+            size_hint=(1, 0.45)
         )
 
         self.layout.add_widget(self.lbl_text)
 
-        # Zona butoane
+        # ---------------- ZONĂ BUTOANE ----------------
+
         self.box_butoane = BoxLayout(
             orientation='vertical',
-            size_hint=(0.8, 0.4),
+
+            size_hint=(0.85, 0.3),
+
             pos_hint={'center_x': 0.5},
-            spacing=10
+
+            spacing=12
         )
 
         self.btn_generare = Button(
             text="Exercițiu Nou",
-            size_hint=(1, 1),
+
+            font_size='22sp',
+
+            size_hint=(1, None),
+            height='65dp',
+
             background_color=(0.8, 0.7, 0.9, 1)
         )
 
@@ -79,7 +103,12 @@ class EcranScriere(Screen):
 
         self.btn_asculta = Button(
             text="Arată din nou",
-            size_hint=(1, 1),
+
+            font_size='22sp',
+
+            size_hint=(1, None),
+            height='65dp',
+
             background_color=(0.4, 0.6, 0.9, 1)
         )
 
@@ -104,7 +133,12 @@ class EcranScriere(Screen):
 
     def genereaza_exercitiu(self, *args):
 
-        with open("date_maya.json", "r", encoding="utf-8") as f:
+        with open(
+            "date_maya.json",
+            "r",
+            encoding="utf-8"
+        ) as f:
+
             data = json.load(f)
 
         self.text_curent = random.choice(data["scriere"])
