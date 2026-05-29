@@ -295,6 +295,7 @@ class EcranMate(Screen):
             font_size='36sp',
 
             halign='center',
+            padding=[0, 18, 0, 0]
 
             size_hint=(0.55, None),
             height='80dp',
@@ -324,7 +325,7 @@ class EcranMate(Screen):
                 self.raspuns_corect
             )
         )
-
+        self.txt_input.focus = True
         self.container.add_widget(btn)
 
     def verific_calcul(self, raspuns, corect):
