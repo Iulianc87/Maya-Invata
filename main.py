@@ -152,7 +152,7 @@ class EcranMeniu(Screen):
 
         # Buton catalog
         btn_catalog = ResponsiveIconButton(
-            source='catalog.png',
+            source='carte.png',
             size_hint=(0.3, 1)
         )
 
