@@ -3,10 +3,8 @@ import json
 from kivy.app import App
 from kivy.utils import platform
 from kivy.clock import Clock
-from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
@@ -36,29 +34,78 @@ class SecretLabel(ButtonBehavior, Label):
 class EcranGreseli(Screen):
     def on_enter(self):
         self.clear_widgets()
+
         main_layout = BoxLayout(orientation='vertical', padding=10)
-        main_layout.add_widget(Label(text="Jurnalul greșelilor", font_size='30sp', size_hint_y=0.1))
+
+        main_layout.add_widget(
+            Label(
+                text="Jurnalul greșelilor",
+                font_size='30sp',
+                size_hint_y=0.1
+            )
+        )
+
         scroll = ScrollView()
-        lista_layout = BoxLayout(orientation='vertical', size_hint_y=None)
-        lista_layout.bind(minimum_height=lista_layout.setter('height'))
+
+        lista_layout = BoxLayout(
+            orientation='vertical',
+            size_hint_y=None
+        )
+
+        lista_layout.bind(
+            minimum_height=lista_layout.setter('height')
+        )
+
         cale = os.path.join(APP_STORAGE, "greseli.json")
+
         if os.path.exists(cale):
             with open(cale, "r", encoding="utf-8") as f:
                 try:
                     greseli = json.load(f)
-                    for g in greseli: 
-                        text_g = f"Exercițiu: {g['ex']} | A pus: {g['gresit']} | Corect: {g['corect']}"
-                        lbl = Label(text=text_g, size_hint_y=None, height=40, font_size='16sp')
+
+                    for g in greseli:
+                        text_g = (
+                            f"Exercițiu: {g['ex']} | "
+                            f"A pus: {g['gresit']} | "
+                            f"Corect: {g['corect']}"
+                        )
+
+                        lbl = Label(
+                            text=text_g,
+                            size_hint_y=None,
+                            height=40,
+                            font_size='16sp'
+                        )
+
                         lista_layout.add_widget(lbl)
+
                 except:
-                    lista_layout.add_widget(Label(text="Eroare la citirea jurnalului."))
+                    lista_layout.add_widget(
+                        Label(text="Eroare la citirea jurnalului.")
+                    )
         else:
-            lista_layout.add_widget(Label(text="Nu există greșeli salvate.", font_size='20sp'))
+            lista_layout.add_widget(
+                Label(
+                    text="Nu există greșeli salvate.",
+                    font_size='20sp'
+                )
+            )
+
         scroll.add_widget(lista_layout)
         main_layout.add_widget(scroll)
-        btn_back = Button(text="Înapoi", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5})
-        btn_back.bind(on_release=lambda x: setattr(self.manager, 'current', 'meniu'))
+
+        btn_back = Button(
+            text="Înapoi",
+            size_hint=(0.3, 0.1),
+            pos_hint={'center_x': 0.5}
+        )
+
+        btn_back.bind(
+            on_release=lambda x: setattr(self.manager, 'current', 'meniu')
+        )
+
         main_layout.add_widget(btn_back)
+
         self.add_widget(main_layout)
 
 class ResponsiveIconButton(ButtonBehavior, Image):
@@ -70,24 +117,107 @@ class ResponsiveIconButton(ButtonBehavior, Image):
 class EcranMeniu(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
         self.click_counter = 0
+
         with self.canvas.before:
             Color(0.95, 0.90, 0.96, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)
+
         self.bind(size=self._update_rect, pos=self._update_rect)
+
         self.layout = FloatLayout()
         self.add_widget(self.layout)
+
         self.afiseaza_continut()
 
     def afiseaza_continut(self):
         self.layout.clear_widgets()
-        # AICI este butonul/iconița pentru catalog, așa cum era în codul tău vechi
-        btn_catalog = ResponsiveIconButton(source='catalog.png', size_hint=(0.3, 0.3), pos_hint={'x': 0.7, 'y': 0.7})
-        btn_catalog.bind(on_release=lambda x: setattr(self.manager, 'current', 'catalog'))
-        self.layout.add_widget(btn_catalog)
+
+        # Layout principal
+        main_box = BoxLayout(
+            orientation='vertical',
+            padding=20,
+            spacing=20
+        )
+
+        # ---------------- HEADER ----------------
+        top_bar = BoxLayout(
+            orientation='horizontal',
+            size_hint=(1, 0.18)
+        )
+
+        # Spațiu stânga
+        top_bar.add_widget(Label(size_hint=(0.7, 1)))
+
+        # Buton catalog
+        btn_catalog = ResponsiveIconButton(
+            source='catalog.png',
+            size_hint=(0.3, 1)
+        )
+
+        btn_catalog.bind(
+            on_release=lambda x: setattr(self.manager, 'current', 'catalog')
+        )
+
+        top_bar.add_widget(btn_catalog)
+
+        main_box.add_widget(top_bar)
+
+        # ---------------- TITLU ----------------
+        title_box = BoxLayout(
+            orientation='vertical',
+            size_hint=(1, 0.2),
+            spacing=10
+        )
+
+        lbl_nume = SecretLabel(
+            text="Bun venit, [b]Maya![/b]",
+            markup=True,
+            font_size='28sp',
+            color=(0.3, 0.1, 0.4, 1)
+        )
+
+        lbl_nume.bind(on_release=self.verific_apasari_secrete)
+
+        lbl_sub = Label(
+            text="Ce vrei să facem azi?",
+            font_size='22sp',
+            color=(0.4, 0.2, 0.5, 1)
+        )
+
+        title_box.add_widget(lbl_nume)
+        title_box.add_widget(lbl_sub)
+
+        main_box.add_widget(title_box)
+
+        # ---------------- MODULE ----------------
+        buttons_box = BoxLayout(
+            orientation='vertical',
+            spacing=20,
+            size_hint=(1, 0.62)
+        )
+
+        for nume in ['mate', 'scriere', 'dictare']:
+
+            btn = ResponsiveIconButton(
+                source=f'{nume}.png'
+            )
+
+            btn.bind(
+                on_release=lambda x, n=nume:
+                setattr(self.manager, 'current', n)
+            )
+
+            buttons_box.add_widget(btn)
+
+        main_box.add_widget(buttons_box)
+
+        self.layout.add_widget(main_box)
 
     def verific_apasari_secrete(self, instance):
         self.click_counter += 1
+
         if self.click_counter >= 3:
             self.click_counter = 0
             self.manager.current = 'ecran_greseli'
@@ -98,31 +228,59 @@ class EcranMeniu(Screen):
 
 class MayaInvataApp(App):
     def build(self):
+
         if platform == 'android':
             from jnius import autoclass
-            ActivityInfo = autoclass('android.content.pm.ActivityInfo')
-            activity = autoclass('org.kivy.android.PythonActivity').mActivity
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        sm = ScreenManager(transition=NoTransition())
+
+            ActivityInfo = autoclass(
+                'android.content.pm.ActivityInfo'
+            )
+
+            activity = autoclass(
+                'org.kivy.android.PythonActivity'
+            ).mActivity
+
+            activity.setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            )
+
+        sm = ScreenManager(
+            transition=NoTransition()
+        )
+
         sm.add_widget(EcranMeniu(name='meniu'))
         sm.add_widget(EcranCatalog(name='catalog'))
         sm.add_widget(EcranMate(name='mate'))
         sm.add_widget(EcranScriere(name='scriere'))
         sm.add_widget(EcranDictare(name='dictare'))
         sm.add_widget(EcranGreseli(name='ecran_greseli'))
+
         return sm
 
     def on_start(self):
         Clock.schedule_once(self._set_fullscreen, 0.5)
 
     def _set_fullscreen(self, dt):
+
         if platform == 'android':
             try:
                 from jnius import autoclass
-                activity = autoclass('org.kivy.android.PythonActivity').mActivity
-                LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
-                activity.getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
-            except: pass
+
+                activity = autoclass(
+                    'org.kivy.android.PythonActivity'
+                ).mActivity
+
+                LayoutParams = autoclass(
+                    'android.view.WindowManager$LayoutParams'
+                )
+
+                activity.getWindow().setFlags(
+                    LayoutParams.FLAG_FULLSCREEN,
+                    LayoutParams.FLAG_FULLSCREEN
+                )
+
+            except:
+                pass
 
 if __name__ == '__main__':
     MayaInvataApp().run()
