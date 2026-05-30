@@ -8,7 +8,7 @@ source.include_exts = py,png,jpg,kv,json,ttf
 
 version = 0.1
 
-requirements = python3,kivy==2.2.1
+requirements = python3,kivy
 
 orientation = portrait
 
@@ -23,10 +23,5 @@ android.permissions = INTERNET
 
 presplash.color = #f2e6f5
 
-# ---------------------------------------------------------------------
-
 [buildozer]
-
 log_level = 2
-
-warn_on_root = 1
