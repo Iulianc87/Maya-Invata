@@ -1,41 +1,37 @@
-name: Build APK
+name: Build Android App
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    container:
-      image: kivy/buildozer:latest
-
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          # Am setat versiunea 3.11 pentru a evita lipsa modulului 'cgi'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          apt-get update
-          apt-get install -y git zip unzip openjdk-17-jdk
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          python -m pip install --upgrade pip
+          pip install --upgrade setuptools wheel cython buildozer
 
-      - name: Install specific Kivy version
+      - name: Build with Buildozer
         run: |
-          pip install --upgrade pip
-          pip install kivy==2.2.1
+          # Aici rulezi build-ul propriu-zis
+          buildozer android debug
 
-      - name: Clean old build
-        run: |
-          rm -rf .buildozer
-          rm -rf bin
-
-      - name: Build APK
-        run: |
-          export BUILDOZER_ALLOW_ROOT=1
-          yes y | buildozer android debug
-
-      - name: Upload APK
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mayainvata-apk
+          name: package
           path: bin/*.apk
